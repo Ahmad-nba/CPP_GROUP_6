@@ -147,6 +147,6 @@ ninja -- will rebuild the project using the updated source code and generate a n
 - Clearly understand the project objective at hand. 
 - Clearly understand the folder structure and build of the project in development environment. 
 - Have a clear collaboratiion strategy. 
-
+- Established a foundational understanding necessary to begin core library implementation in week 02.
 ---
 

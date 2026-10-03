@@ -28,23 +28,61 @@ Expected Outputs :
 
 ### 2.1 Repository Structure
 
-**Assigned to:**
-**Status:** `Not Started / In Progress / Complete`
-
-Show the relevant project structure.
-
-```text
-project/
-├── ...
-├── ...
-├── ...
-└── ...
+**Assigned to:** Janefer Mbabazi
 ```
+project-name/
+│
+├── README.md
+├── CMakeLists.txt
+├── LICENSE
+├── .gitignore
+│
+├── include/
+│   └── project-name/
+│       ├── module1.hpp
+│       ├── module2.hpp
+│       └── ...
+│
+├── src/
+│   ├── module1.cpp
+│   ├── module2.cpp
+│   └── ...
+│
+├── tests/
+│   ├── test_module1.cpp
+│   ├── test_module2.cpp
+│   └── ...
+│
+├── examples/
+│   ├── example1.cpp
+│   ├── example2.cpp
+│   └── ...
+│
+├── reports/
+│   ├── week-01.md
+│   ├── week-02.md
+│   ├── week-03.md
+│   └── final-report.md
+│
+└── data/
+    ├── input/
+    └── output/
+
+
+```
+
 
 ### 2.2 Folder Responsibilities
 
-Explain the purpose of each major directory.
-
+# include- 
+It has only the files that are accessible to the external user.
+# source -
+ it has all the  files containing what the entire
+ program does.
+# test directory-
+ this is where testing of whether the program works is done using differnt input values by the people designing the program.
+# example directory-
+ this is where implementing of the program happens by inputing different function inputs to see the output.
 ---
 
 ### 4.1 Build System Overview

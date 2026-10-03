@@ -88,11 +88,11 @@ It has only the files that are accessible to the external user.
 
 
 
-### 4.1 Build System Overview
+### 3.1 Build System Overview
 
 Explain the overall build system and its components.
 
-### 4.2 Understanding `CMakeLists.txt`
+### 3.2 Understanding `CMakeLists.txt`
 
 # Dependencies:
 
@@ -135,14 +135,14 @@ ninja -- will rebuild the project using the updated source code and generate a n
 ```
 ---
 
-# 9. Next Phase
+# 4. Next Phase
 
-### 9.1 Areas Requiring Deeper Investigation
+### 4.1 Areas Requiring Deeper Investigation
 
 - We now plan o start on the core implementation of the library. By selecting our first librar functionality to implement.
 
 
-# 10. Conclusion
+# 5. Conclusion
 
 - Clearly understand the project objective at hand. 
 - Clearly understand the folder structure and build of the project in development environment. 

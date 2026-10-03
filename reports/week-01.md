@@ -8,17 +8,21 @@
 
 ### 1.1 The Core Project
 
-**Assigned to:** [Name]
+**Assigned to:** Obuluk Agatha
 
 Describe what the project is fundamentally about.
+The purpose is to give programmers an easy " data first" library in C++ where they can just hand the program the data file , pick their axes  and instantly get a clean statistical graph.
 
-Address:
+Its major capabilities include:
+Data and statistics 
+Scaling
+Drawing
+Export
 
-- What problem does the project solve?
-- What is the intended purpose of the system?
-- What are its major capabilities/components?
-- What are the expected inputs and outputs?
-- What was the reference material/specification provided to us?
+Expected Inputs : Comma seperated data files (.csv) full of words and numbers , along with user selected titles and column axes
+
+Expected Outputs : 
+
 
 # 2. Project Architecture & Folder Structure
 

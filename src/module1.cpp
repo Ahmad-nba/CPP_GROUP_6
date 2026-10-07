@@ -1,9 +1,6 @@
-#include "project-name/module1.hpp"
+#include "module1.hpp"
 
-namespace project_name {
-
-int module1_value() {
-    return 1;
+int add(int a, int b)
+{
+    return a + b;
 }
-
-}  // namespace project_name

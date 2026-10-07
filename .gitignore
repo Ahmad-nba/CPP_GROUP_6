@@ -2,6 +2,9 @@
 /build/
 /cmake-build-*/
 
+/explanations
+
+
 # Compiled files
 *.o
 *.obj

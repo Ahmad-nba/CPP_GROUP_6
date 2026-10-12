@@ -2,18 +2,17 @@
 
 ## 1. Module Overview
 
-<!-- The input module establishes how data is represented and validated before being passed to subsequent components of the visualization library.
+The input module establishes how data is represented and validated before being passed to subsequent components of the visualization library and this key.
 
-For this implementation phase, data is supplied directly through C++ code using a predefined data structure. External file input, such as CSV reading, is not included in the current scope.
+For this implementation phase, data is supplied 
+directly through C++ code using a predefined data structure. External file input, such as CSV reading, is not included in the current scope.
 
 The module has two primary responsibilities:
 
-1. **Data representation:** Define a consistent structure for storing categories and their numerical values.
-2. **Data validation:** Check whether a dataset satisfies the rules required by the current implementation. -->
+1. Data representation:  Define a consistent structure for storing categories and their numerical values.
 
-### Current Input Flow
-<!-- describe how the input enters and how we handle it to produce the graph -->
----
+2. Data validation:  Check whether a dataset satisfies the rules required by the current implementation.
+ With this, we can describe  the kind of data required to produce the graph.
 
 ## 2. Data Representation in C++
 

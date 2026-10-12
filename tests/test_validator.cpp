@@ -1,4 +1,4 @@
-#include "CPP_GROUP_6/validator.hpp"
+#include "CPP_GROUP_6/include/cpp_group_6_mini_seaborn/validator.hpp"
 
 #include <cassert>
 #include <cmath>

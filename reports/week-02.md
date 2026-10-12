@@ -57,4 +57,4 @@ it checks the input data to make sure no invalid information is passed.
 
 ### Conclusion
 
-[Briefly explain what the input validation module now does, how its C++ structures and class work together, and whether the implementation and tests behaved as expected.]
+Briefly the input validation module is the gate step for ingesting in data that goes into our visualization library. 

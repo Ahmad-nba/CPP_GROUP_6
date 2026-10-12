@@ -97,36 +97,16 @@ Although validation could also be implemented as a standalone function, the clas
 
 ## 4. Validation Logic and Rules
 
-The `validate()` method checks the supplied dataset and returns a result describing whether it meets the current requirements.
+#The validate() function is used to test whether a certain condition is correct or wrong and returns a value according to the criteria followed.
 
 ### 4.1 Implemented Validation Rules
 
-<!-- | Condition                              | Result  | Reason                                                              |
-| -------------------------------------- | ------- | ------------------------------------------------------------------- |
-| Dataset is empty                       | Invalid | No data points are available.                                       |
-| Category label is empty                | Invalid | The data point has no category label.                               |
-| Value is NaN                           | Invalid | The numerical value is not finite.                                  |
-| Value is positive or negative infinity | Invalid | The numerical value is not finite.                                  |
-| Value is zero                          | Valid   | Zero is a legitimate numerical value.                               |
-| Value is negative but finite           | Valid   | Negative values can represent meaningful quantities such as losses. |
-| Category labels are duplicated         | Allowed | Duplicate-category handling has not yet been restricted.            | -->
+As earleir introduced, validate() is used to test a condition 
+it checks the input data to make sure no invalid information is passed. 
 
-<!-- Describe in your own words -->
-### 4.2 How Validation Works
+-> missing values in the plot column.
+-> Strings as values to plot, they can be labels but not plot values. 
 
-The implementation follows these steps:
-
-1. Initialize a `ValidationResult` indicating success with an empty error list.
-2. Check whether the dataset is empty. If it is, record an error and return immediately.
-3. Iterate through the data points.
-4. Check each category label for emptiness.
-5. Check each numerical value using `std::isfinite()`.
-6. Record descriptive error messages for any failed checks.
-7. Return the final result.
-
-The validator does not modify the original dataset. It examines the supplied data and reports its findings.
-
-The current design also allows the validator to collect multiple errors in a single pass instead of stopping at the first invalid data point.
 
 
 

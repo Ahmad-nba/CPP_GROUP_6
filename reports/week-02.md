@@ -48,52 +48,16 @@ Using a structure keeps the category and its associated value together, making t
 * `include/CPP_GROUP_6/validator.hpp`
 * `src/validator.cpp`
 
-### 3.1 The `ValidationResult` Structure
+3.1 The `ValidationResult` Structure
+Implementing Validation Using a C++ Class
 
-```cpp
-struct ValidationResult {
-    bool valid;
-    std::vector<std::string> errors;
-};
-```
+In our group project, we used a C++ class called `DataValidator` to check whether the data entered meets the required conditions. We created a `ValidationResult` structure to show whether the data is valid and to store any errors found.
 
-This structure represents the outcome of validating a dataset.
+The `validate()` method performs the checking and returns the results without changing the original data. We separated the code into `validator.hpp` and `validator.cpp` to make it easier to organize, understand, and maintain.
 
-* `valid` indicates whether the dataset passed validation.
-* `errors` stores descriptions of any validation problems found.
+In conclusion, this approach helps us detect errors, keep our code organized, and reuse the same validation method in different parts of the project.
 
-Returning both fields allows the calling program to determine whether validation succeeded and understand why it failed.
 
-### 3.2 The `DataValidator` Class
-
-```cpp
-class DataValidator {
-public:
-    ValidationResult validate(const Dataset& data) const;
-};
-```
-
-The `DataValidator` class encapsulates the validation operation behind a public method named `validate()`.
-
-The method receives a dataset and returns a `ValidationResult`.
-
-**Understanding the method signature:**
-
-* `const Dataset& data`: Passes the dataset by reference without making a full copy and prevents the method from modifying the supplied dataset.
-* `ValidationResult`: Defines the information returned to the caller.
-* The trailing `const`: Indicates that the method does not modify the observable state of the `DataValidator` object.
-
-The class separates validation behavior from the demonstration program and future plotting components. Other parts of the project can use the same validator instead of implementing their own checks.
-
-### 3.3 Why Use a Class?
-
-The class provides a clear interface for the validation responsibility. The calling code only needs to create a `DataValidator` object and call its `validate()` method; it does not need to know the internal validation procedure.
-
-The interface is declared in `validator.hpp`, while its implementation is defined in `validator.cpp`. This separates what the module exposes from how it performs its work.
-
-Although validation could also be implemented as a standalone function, the class provides an explicit component boundary for this project.
-
----
 
 ## 4. Validation Logic and Rules
 

@@ -20,26 +20,7 @@ The module has two primary responsibilities:
 **File:** `include/CPP_GROUP_6/module1.hpp`
 
 ### 2.1 The `DataPoint` Structure
-
-<!-- ```cpp
-struct DataPoint {
-    std::string category;
-    double value;
-};
-```
-
-The `DataPoint` structure groups two related pieces of information into one object: a category label and its numerical value.
-
-For example:
-
-```cpp
-DataPoint item{"Shoes", 120};
-```
-
-This creates one data point with the category `"Shoes"` and the value `120`.
-
-Using a structure keeps the category and its associated value together, making the data easier for other components to access and process. -->
-<!--  -->
+This groups two related objects into one object such as category label and its numerical value.for example {shoes, 69}. This creates one object. amusing a datapoint structure makes the data easy for other components to access and process.
 
 ## 3. Implementing Validation with a C++ Class
 

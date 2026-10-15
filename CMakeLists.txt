@@ -7,6 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(cpp_group_6
     src/module1.cpp
+    src/validator.cpp
     # src/module2.cpp
 )
 
@@ -21,9 +22,9 @@ add_executable(test_module1 tests/test_module1.cpp)
 target_link_libraries(test_module1 PRIVATE cpp_group_6)
 add_test(NAME test_module1 COMMAND test_module1)
 
-# add_executable(test_module2 tests/test_module2.cpp)
-# target_link_libraries(test_module2 PRIVATE cpp_group_6)
-# add_test(NAME test_module2 COMMAND test_module2)
+add_executable(test_validator tests/test_validator.cpp)
+target_link_libraries(test_validator PRIVATE cpp_group_6)
+add_test(NAME test_validator COMMAND test_validator)
 
 # add_executable(example1 examples/example1.cpp)
 # target_link_libraries(example1 PRIVATE cpp_group_6)

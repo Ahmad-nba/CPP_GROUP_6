@@ -1,7 +1,7 @@
 #ifndef CPP_GROUP_6_VALIDATOR_HPP
 #define CPP_GROUP_6_VALIDATOR_HPP
 
-#include "CPP_GROUP_6/module1.hpp"
+#include "module1.hpp"
 
 #include <string>
 #include <vector>

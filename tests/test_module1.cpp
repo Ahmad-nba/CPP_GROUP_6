@@ -3,9 +3,9 @@
 
 int main()
 {
-    int result = add(22, 3);
+    // int result = add(22, 3);
 
-    std::cout << "Result: " << result << '\n';
+    // std::cout << "Result: " << result << '\n';
 
     return 0;
 } 

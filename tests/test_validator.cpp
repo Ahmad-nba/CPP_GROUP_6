@@ -38,10 +38,10 @@ int main() {
 
     // Test 2: Valid dataset
     Dataset valid_data = {
-        {"apples", 10.0},
+        {"", 10.0},
         {"Bananas", 15.5},
         {"Oranges", 20.0}
-    };
+    }; 
 
     ValidationResult valid_result = validator.validate(valid_data);
 

@@ -4,7 +4,7 @@
 
 Briefly describe the purpose of this milestone and its position in the plotting pipeline.
 
-Implementation
+## 2. Implementation
 2.1 Dataset View
 
 Purpose

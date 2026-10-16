@@ -22,11 +22,12 @@ Briefly describe the purpose of this milestone and its position in the plotting 
 
 ## 3. C++ Design Decisions
 
-Briefly explain the use of:
+Briefl explained usage:
 
-* `struct` for `DatasetView` and `ObservedRange`.
-* A function for dataset transformation and a function for value analysis.
-* `const` references and standard-library algorithms where applicable.
+* "struct" for "DatasetView" and "ObservedRange". Structures group related data into a single type, improving code organization and readability.
+* Functions for dataset transformation and value analysis. Separate functions handle different tasks, improving modularity, reusability, and maintainability.
+* "const" references and standard-library algorithms where applicable. Constant references avoid unnecessary copying and prevent modification through the reference, while standard-library algorithms simplify data processing and reduce repetitive code.
+
 
 ## 4. Testing and Results
 

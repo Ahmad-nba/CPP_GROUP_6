@@ -1,14 +1,15 @@
 # Plotting Engine: Dataset Separation and Value Analysis
 
-## 1. Milestone Objective
-
-Briefly describe the purpose of this milestone and its position in the plotting pipeline.
+## 1. plotting values
+This week emphasis is put on how to plot values that shall be visualized on the graphs  
 
 ## 2. Implementation
-2.1 Dataset View
-
-Purpose
- The dataset view is responsible for organizing and displaying the data in a clear format.
+first, we validate the data to make sure the right values are passed with no errrors. 
+then, we split the values into the features on the x axis and  values that shall be on the y axis.
+we then analyse the values to get a suitable scale 
+the features are divided into their own view as well as the values 
+we can then develop a mathematival mathod for delepoing a suitable scale for the respective features and values scale.
+### 2.1 Dataset View
 
 Structures and functions implemented
  The implementation uses suitable C++ data structures, such as vectors and strings, to store category names and their corresponding values.

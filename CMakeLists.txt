@@ -8,6 +8,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(cpp_group_6
     src/module1.cpp
     src/validator.cpp
+    src/value_analysis.cpp
+    src/dataset_view.cpp
     # src/module2.cpp
 )
 
@@ -25,6 +27,14 @@ add_test(NAME test_module1 COMMAND test_module1)
 add_executable(test_validator tests/test_validator.cpp)
 target_link_libraries(test_validator PRIVATE cpp_group_6)
 add_test(NAME test_validator COMMAND test_validator)
+
+add_executable(test_value_analysis tests/test_value_analysis.cpp)
+target_link_libraries(test_value_analysis PRIVATE cpp_group_6)
+add_test(NAME test_value_analysis COMMAND test_value_analysis)
+
+add_executable(test_dataset_view tests/test_dataset_view.cpp)
+target_link_libraries(test_dataset_view PRIVATE cpp_group_6)
+add_test(NAME test_dataset_view COMMAND test_dataset_view)
 
 # add_executable(example1 examples/example1.cpp)
 # target_link_libraries(example1 PRIVATE cpp_group_6)

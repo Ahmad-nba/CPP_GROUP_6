@@ -70,3 +70,6 @@ How category-value alignment is preserved
 
     ADR: Given all those 2 require QT knoeledge of what format it accepts, thats why we have pushed it to its own week. 
 
+    3) Configuring the project to fit and enable for the multiple plots of point plot, swarm plot and heat map. 
+
+    4) Redesigning the classes to allow for base class inheritance of general methods. 

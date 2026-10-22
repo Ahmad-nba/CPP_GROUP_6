@@ -10,6 +10,9 @@ add_library(cpp_group_6
     src/validator.cpp
     src/value_analysis.cpp
     src/dataset_view.cpp
+    src/point_plot.cpp
+    src/swarm_plot.cpp
+    src/heatmap_plot.cpp
     # src/module2.cpp
 )
 
@@ -35,6 +38,10 @@ add_test(NAME test_value_analysis COMMAND test_value_analysis)
 add_executable(test_dataset_view tests/test_dataset_view.cpp)
 target_link_libraries(test_dataset_view PRIVATE cpp_group_6)
 add_test(NAME test_dataset_view COMMAND test_dataset_view)
+
+add_executable(test_plot_transformers tests/test_plot_transformers.cpp)
+target_link_libraries(test_plot_transformers PRIVATE cpp_group_6)
+add_test(NAME test_plot_transformers COMMAND test_plot_transformers)
 
 # add_executable(example1 examples/example1.cpp)
 # target_link_libraries(example1 PRIVATE cpp_group_6)

@@ -15,7 +15,7 @@ std::optional<ObservedRange> analyzeValues(
         view.values.begin(),
         view.values.end()
     );
-
+  
     return ObservedRange{
         *min_it,
         *max_it

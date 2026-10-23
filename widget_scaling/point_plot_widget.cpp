@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <vector>
 
 PointPlotWidget::PointPlotWidget(QWidget* parent)
     : QWidget(parent),
@@ -152,12 +153,15 @@ void PointPlotWidget::paintEvent(QPaintEvent* event) {
         static_cast<int>(plotData_.points.size());
     const double slotWidth = plotRect.width() / pointCount;
     const QFontMetrics metrics(painter.font());
+    std::vector<QPointF> pointCenters;
+    pointCenters.reserve(plotData_.points.size());
 
     for (int index = 0; index < pointCount; ++index) {
         const auto& point = plotData_.points[static_cast<std::size_t>(index)];
         const double x =
             plotRect.left() + (index + 0.5) * slotWidth;
         const double y = mapValueToY(point.value, range, plotRect);
+        pointCenters.emplace_back(x, y);
 
         painter.setPen(QColor("#444444"));
         painter.drawText(
@@ -174,9 +178,25 @@ void PointPlotWidget::paintEvent(QPaintEvent* event) {
                 static_cast<int>(slotWidth) - 4
             )
         );
+    }
 
+    constexpr double verticalGuideHalfLength = 28.0;
+    painter.setPen(QPen(QColor("#e8a53a"), 2.0));
+    for (const auto& center : pointCenters) {
+        painter.drawLine(
+            QPointF(center.x(), center.y() - verticalGuideHalfLength),
+            QPointF(center.x(), center.y() + verticalGuideHalfLength)
+        );
+    }
+
+    painter.setBrush(Qt::NoBrush);
+    for (std::size_t index = 1; index < pointCenters.size(); ++index) {
+        painter.drawLine(pointCenters[index - 1], pointCenters[index]);
+    }
+
+    for (const auto& center : pointCenters) {
         painter.setPen(QPen(QColor("#1769aa"), 1));
         painter.setBrush(QColor("#42a5f5"));
-        painter.drawEllipse(QPointF(x, y), 6.0, 6.0);
+        painter.drawEllipse(center, 6.0, 6.0);
     }
 }

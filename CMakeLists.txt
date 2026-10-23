@@ -5,14 +5,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(
+    CPP_GROUP_6_BUILD_POINT_PLOT
+    "Build the Qt point plot application"
+    OFF
+)
+
 add_library(cpp_group_6
     src/module1.cpp
     src/validator.cpp
     src/value_analysis.cpp
     src/dataset_view.cpp
-    src/point_plot.cpp
-    src/swarm_plot.cpp
-    src/heatmap_plot.cpp
+    src/transformers/point_plot.cpp
+    src/transformers/swarm_plot.cpp
+    src/transformers/heatmap_plot.cpp
     # src/module2.cpp
 )
 
@@ -42,6 +48,23 @@ add_test(NAME test_dataset_view COMMAND test_dataset_view)
 add_executable(test_plot_transformers tests/test_plot_transformers.cpp)
 target_link_libraries(test_plot_transformers PRIVATE cpp_group_6)
 add_test(NAME test_plot_transformers COMMAND test_plot_transformers)
+
+if(CPP_GROUP_6_BUILD_POINT_PLOT)
+    find_package(Qt6 REQUIRED COMPONENTS Widgets)
+
+    add_executable(
+        point_plot_run
+        examples/point_plot_run.cpp
+        widget_scaling/point_plot_widget.cpp
+        include/cpp_group_6_mini_seaborn/point_plot_widget.hpp
+    )
+    target_link_libraries(
+        point_plot_run
+        PRIVATE
+            cpp_group_6
+            Qt6::Widgets
+    )
+endif()
 
 # add_executable(example1 examples/example1.cpp)
 # target_link_libraries(example1 PRIVATE cpp_group_6)

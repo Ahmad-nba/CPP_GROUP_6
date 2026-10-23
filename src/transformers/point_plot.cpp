@@ -4,7 +4,7 @@
 
 #include <map>
 #include <optional>
-
+ 
 namespace cpp_group_6 {
 
 std::optional<PointPlotData> transformPointPlot(const Dataset& data) {

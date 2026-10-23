@@ -64,6 +64,11 @@ if(CPP_GROUP_6_BUILD_POINT_PLOT)
             cpp_group_6
             Qt6::Widgets
     )
+    target_compile_definitions(
+        point_plot_run
+        PRIVATE
+            POINT_PLOT_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
+    )
 endif()
 
 # add_executable(example1 examples/example1.cpp)

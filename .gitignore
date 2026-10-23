@@ -2,6 +2,7 @@
 /build/
 /build-qt/
 /cmake-build-*/
+/examples/saved_plots/
 
 /explanations
 

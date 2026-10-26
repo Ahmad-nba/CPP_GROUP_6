@@ -4,6 +4,7 @@
 #include <QPainter>
 
 #include "swarm_plot-widget.hpp"
+#include "input_data.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -62,11 +63,7 @@ bool saveSwarmPlotImage(QWidget& widget) {
 int main(int argc, char* argv[]) {
     QApplication application(argc, argv);
 
-    const cpp_group_6::Dataset data = {
-        {"A", 12.0}, {"A", 15.0}, {"A", 15.0}, {"A", 15.0}, {"A", 15.0}, {"A", 18.0}, {"A", 21.0},
-        {"B", 10.0}, {"B", 14.0}, {"B", 17.0}, {"B", 17.0}, {"B", 17.0}, {"B", 17.0},{"B", 17.0}, 
-        {"C", 13.0}, {"C", 16.0}, {"C", 19.0},{"C", 13.0}, {"C", 19.0},{"C", 13.0}, {"C", 16.0}, 
-    };
+    const auto& data = cpp_group_6::input::swarmPlotData();
 
     SwarmPlotWidget window;
     window.setWindowTitle("CPP Group 6 - Qt Swarm Plot");

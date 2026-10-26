@@ -4,6 +4,7 @@
 #include <QPainter>
 
 #include "point_plot_widget.hpp"
+#include "input_data.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -62,23 +63,7 @@ bool savePlotImage(QWidget& widget) {
 int main(int argc, char* argv[]) {
     QApplication application(argc, argv);
 
-    const cpp_group_6::Dataset data = {
-        {"A", 2.0},
-        {"A", -2.0},
-        {"B", 4.0},
-        {"A", 0.0},
-        {"C", 5.0},
-        {"C", 7.0},
-        {"A", 3.0},
-        {"D", 3.0},
-        {"D", 1.0},
-        {"B", 3.0},
-        {"C", 2.0},
-        {"A", 1.0},
-        {"B", 5.0},
-        {"C", 4.0},
-        {"D", 2.0}
-    };
+    const auto& data = cpp_group_6::input::pointPlotData();
 
     PointPlotWidget window;
     window.setWindowTitle("CPP Group 6 - Qt Point Plot");

@@ -44,12 +44,10 @@ ctest --test-dir build --output-on-failure
 The core build contains the `cpp_group_6` static library and all unit-test
 executables. It does not require Qt.
 
-The current test suite reports one known failure in
-`test_plot_transformers`: the swarm transformer offsets repeated observations
-even when their values do not collide. The build itself succeeds, and the
-validator, heatmap-correlation, and remaining tests pass. Treat a CTest exit
-code of `8` as this known behavioral failure until that separate issue is
-addressed.
+The swarm transformer uses collision-aware placement so that separated values
+remain centered and duplicate or nearby values are spread only when needed.
+The focused validator, plot-transformer, heatmap-correlation, and swarm tests
+pass after the current configuration is built.
 
 To build a single target:
 
@@ -125,6 +123,30 @@ export QT_QPA_PLATFORM_PLUGIN_PATH=/c/msys64/ucrt64/share/qt6/plugins/platforms
 
 The GUI event loop remains active until the window is closed. The PNG is
 created during startup after the window has been rendered.
+
+## Supplying plot data
+
+The application data is kept outside the Qt run files. To change the data
+used by the demonstrations, edit:
+
+```text
+data/input/input_data.cpp
+```
+
+That file provides separate inputs for the point plot, swarm plot, and
+heatmap through `pointPlotData()`, `swarmPlotData()`, and `heatmapData()`.
+After changing the data, rebuild the required Qt target and run it again:
+
+```bash
+cmake --build build-qt --target point_plot_run
+cmake --build build-qt --target swarm_plot_run
+cmake --build build-qt --target heatmap_run
+```
+
+The run files and plotting code do not need to be edited to change the
+datasets. The point and swarm inputs use category/value pairs. The heatmap
+input contains feature names and a rectangular numerical matrix; every row
+must have the same number of values as the feature-name list.
 
 ## Reconfigure or clean
 

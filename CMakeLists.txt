@@ -66,8 +66,10 @@ if(CPP_GROUP_6_BUILD_POINT_PLOT)
     add_executable(
         point_plot_run
         examples/point_plot_run.cpp
+        data/input/input_data.cpp
         widget_scaling/point_plot_widget.cpp
         include/cpp_group_6_mini_seaborn/point_plot_widget.hpp
+        data/input/input_data.hpp
     )
     target_link_libraries(
         point_plot_run
@@ -84,8 +86,10 @@ if(CPP_GROUP_6_BUILD_POINT_PLOT)
     add_executable(
         heatmap_run
         examples/heatmap_run.cpp
+        data/input/input_data.cpp
         widget_scaling/heatmap_plot_widget.cpp
         include/cpp_group_6_mini_seaborn/heatmap_plot_widget.hpp
+        data/input/input_data.hpp
     )
     target_link_libraries(
         heatmap_run
@@ -102,14 +106,31 @@ if(CPP_GROUP_6_BUILD_POINT_PLOT)
     add_executable(
         swarm_plot_run
         examples/swarm_plot_run.cpp
+        data/input/input_data.cpp
         widget_scaling/Swarm_plot_widget.cpp
         include/cpp_group_6_mini_seaborn/swarm_plot-widget.hpp
+        data/input/input_data.hpp
     )
     target_link_libraries(
         swarm_plot_run
         PRIVATE
             cpp_group_6
             Qt6::Widgets
+    )
+    target_include_directories(
+        point_plot_run
+        PRIVATE
+            ${PROJECT_SOURCE_DIR}/data/input
+    )
+    target_include_directories(
+        heatmap_run
+        PRIVATE
+            ${PROJECT_SOURCE_DIR}/data/input
+    )
+    target_include_directories(
+        swarm_plot_run
+        PRIVATE
+            ${PROJECT_SOURCE_DIR}/data/input
     )
     target_compile_definitions(
         swarm_plot_run

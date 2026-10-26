@@ -347,6 +347,9 @@ CPP_GROUP_6/
 |-- data/
 |   |-- input/
 |   |   `-- .gitkeep
+|   |-- input/
+|   |   |-- input_data.cpp             # User-editable point, swarm, and heatmap data
+|   |   `-- input_data.hpp
 |   `-- output/
 |       `-- .gitkeep
 |
@@ -420,15 +423,18 @@ transformation checks, numerical analysis checks, plot-specific behaviour
 tests, and manual inspection of generated visualizations. The core and
 Qt-enabled configurations are both built with CMake and Ninja.
 
-The validator and heatmap-correlation tests pass. The remaining test
-executables also build and run, although the current
-`test_plot_transformers` suite reports a known failure in the swarm
-transformer's handling of non-colliding values. This failure concerns swarm
-plot behaviour and does not prevent the project from building or the
-visualization applications from running.
+The validator, plot-transformer, heatmap-correlation, and swarm tests pass.
+The swarm transformer uses collision-aware placement so that non-colliding
+values remain centered while duplicate or nearby values are spread only when
+necessary.
 
 The point-plot executable has been run successfully, and its PNG output has
 been generated in `examples/saved_plots/`.
+
+The plot datasets are maintained in `data/input/input_data.cpp`. The Qt run
+files consume the point-plot, swarm-plot, and heatmap data from that shared
+input layer, so users can change the datasets without modifying the
+visualization entry points.
 
 ---
 

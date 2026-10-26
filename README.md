@@ -62,11 +62,11 @@ The implemented visualizations are:
 
 The final outputs are shown below.
 
-![point plot](image.png)
+![point plot](<Screenshot 2026-10-26 204001.png>)
 *Figure 1: Point plot showing data points connected to illustrate changes
 between observations.*
 
-![heat map](image-1.png)
+![heat map](<Screenshot 2026-10-26 204135.png>)
 *Figure 2: Heatmap illustrating relationships between features through colour
 intensity.*
 

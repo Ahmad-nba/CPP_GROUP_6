@@ -1,0 +1,795 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09298d9..6666b59 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,6 +49,17 @@ add_executable(test_plot_transformers tests/test_plot_transformers.cpp)
+ target_link_libraries(test_plot_transformers PRIVATE cpp_group_6)
+ add_test(NAME test_plot_transformers COMMAND test_plot_transformers)
+ 
++add_executable(
++    test_heatmap_correlation
++    tests/test_heatmap_correlation.cpp
++)
++target_link_libraries(test_heatmap_correlation PRIVATE cpp_group_6)
++add_test(NAME test_heatmap_correlation COMMAND test_heatmap_correlation)
++
++add_executable(test_swarm_plot tests/test_swarm_plot.cpp)
++target_link_libraries(test_swarm_plot PRIVATE cpp_group_6)
++add_test(NAME test_swarm_plot COMMAND test_swarm_plot)
++
+ if(CPP_GROUP_6_BUILD_POINT_PLOT)
+     find_package(Qt6 REQUIRED COMPONENTS Widgets)
+ 
+@@ -69,6 +80,42 @@ if(CPP_GROUP_6_BUILD_POINT_PLOT)
+         PRIVATE
+             POINT_PLOT_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
+     )
++
++    add_executable(
++        heatmap_run
++        examples/heatmap_run.cpp
++        widget_scaling/heatmap_plot_widget.cpp
++        include/cpp_group_6_mini_seaborn/heatmap_plot_widget.hpp
++    )
++    target_link_libraries(
++        heatmap_run
++        PRIVATE
++            cpp_group_6
++            Qt6::Widgets
++    )
++    target_compile_definitions(
++        heatmap_run
++        PRIVATE
++            HEATMAP_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
++    )
++
++    add_executable(
++        swarm_plot_run
++        examples/swarm_plot_run.cpp
++        widget_scaling/swarm_plot_widget.cpp
++        include/cpp_group_6_mini_seaborn/swarm_plot_widget.hpp
++    )
++    target_link_libraries(
++        swarm_plot_run
++        PRIVATE
++            cpp_group_6
++            Qt6::Widgets
++    )
++    target_compile_definitions(
++        swarm_plot_run
++        PRIVATE
++            SWARM_PLOT_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
++    )
+ endif()
+ 
+ # add_executable(example1 examples/example1.cpp)
+diff --git a/include/cpp_group_6_mini_seaborn/heatmap_plot.hpp b/include/cpp_group_6_mini_seaborn/heatmap_plot.hpp
+index 37c0251..c9e145e 100644
+--- a/include/cpp_group_6_mini_seaborn/heatmap_plot.hpp
++++ b/include/cpp_group_6_mini_seaborn/heatmap_plot.hpp
+@@ -5,15 +5,21 @@
+ #include "observed_range.hpp"
+ 
+ #include <optional>
++#include <vector>
+ 
+ namespace cpp_group_6 {
+ 
+ struct HeatmapPlotData {
+     HeatmapData matrix;
+     ObservedRange observed_range;
++    std::vector<std::string> feature_names;
++    std::vector<std::vector<std::optional<double>>> correlation_matrix;
+ };
+ 
+ std::optional<HeatmapPlotData> transformHeatmap(const HeatmapData& data);
++std::optional<HeatmapPlotData> transformHeatmap(
++    const NumericalDataset& data
++);
+ 
+ } // namespace cpp_group_6
+ 
+diff --git a/include/cpp_group_6_mini_seaborn/module1.hpp b/include/cpp_group_6_mini_seaborn/module1.hpp
+index fa43f34..f37ea66 100644
+--- a/include/cpp_group_6_mini_seaborn/module1.hpp
++++ b/include/cpp_group_6_mini_seaborn/module1.hpp
+@@ -12,5 +12,10 @@ namespace cpp_group_6{
+     };
+ 
+     using Dataset = std::vector<DataPoint>;
++
++    struct NumericalDataset {
++        std::vector<std::string> feature_names;
++        std::vector<std::vector<double>> values;
++    };
+ }// namespace cpp_group_6
+ #endif
+\ No newline at end of file
+diff --git a/include/cpp_group_6_mini_seaborn/validator.hpp b/include/cpp_group_6_mini_seaborn/validator.hpp
+index 8901531..0f8e114 100644
+--- a/include/cpp_group_6_mini_seaborn/validator.hpp
++++ b/include/cpp_group_6_mini_seaborn/validator.hpp
+@@ -52,11 +52,13 @@ private:
+ class HeatmapValidator final : public DataValidator {
+ public:
+     explicit HeatmapValidator(const HeatmapData& data);
++    explicit HeatmapValidator(const NumericalDataset& data);
+ 
+     ValidationResult validate() const override;
+ 
+ private:
+-    const HeatmapData& data_;
++    const HeatmapData* matrix_data_;
++    const NumericalDataset* numerical_data_;
+ };
+ 
+ } // namespace cpp_group_6
+diff --git a/reports/point_plot_png_export_report.md b/reports/point_plot_png_export_report.md
+deleted file mode 100644
+index 5b8fb0b..0000000
+--- a/reports/point_plot_png_export_report.md
++++ /dev/null
+@@ -1,100 +0,0 @@
+-# Point Plot PNG Export Report
+-
+-## A. Implementation Summary
+-
+-The point-plot application now exports the rendered Qt widget to a PNG while
+-preserving the existing validation, transformation, and on-screen rendering
+-workflow.
+-
+-The export captures the existing `PointPlotWidget` with `QWidget::render()`
+-into a `QImage`. No second point-rendering implementation was added.
+-
+-## B. Files Changed
+-
+-- [`CMakeLists.txt`](../CMakeLists.txt)
+-  - Defines the source-tree output directory for the Qt application through
+-    the `POINT_PLOT_OUTPUT_DIRECTORY` compile definition.
+-- [`examples/point_plot_run.cpp`](../examples/point_plot_run.cpp)
+-  - Creates the output directory.
+-  - Renders the initialized widget into a PNG image.
+-  - Overwrites `point_plot.png` on repeated runs.
+-  - Reports success and failure messages.
+-  - Skips export when point-plot transformation fails.
+-- [`.gitignore`](../.gitignore)
+-  - Ignores generated files under `examples/saved_plots/`.
+-
+-## C. Export Workflow
+-
+-```text
+-Dataset
+-  -> PointPlotValidator
+-  -> transformPointPlot()
+-  -> PointPlotData
+-  -> PointPlotWidget::paintEvent()
+-  -> QWidget::render()
+-  -> QImage
+-  -> examples/saved_plots/point_plot.png
+-```
+-
+-The application shows the widget, processes pending Qt events, and then
+-captures the initialized widget. This ensures that the exported image uses the
+-same title, axes, grid, category labels, and point markers as the visible
+-window.
+-
+-## D. Output Location
+-
+-The configured output file is:
+-
+-```text
+-examples/saved_plots/point_plot.png
+-```
+-
+-The output directory is supplied by CMake as an absolute path based on the
+-project source directory:
+-
+-```text
+-${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots
+-```
+-
+-The path is not based on the process working directory. Therefore, launching
+-the executable from `build-qt`, the repository root, or another directory
+-still writes to the source-tree destination.
+-
+-The directory is created with `std::filesystem::create_directories`. Existing
+-`point_plot.png` output is overwritten by `QImage::save`.
+-
+-## E. Verification Results
+-
+-| Check | Result | Evidence |
+-|---|---|---|
+-| Core-only build | Pass | `cmake --build build` completed |
+-| Qt example build | Pass | `cmake --build build-qt --target point_plot_run` completed |
+-| Existing core tests | Pass | 5/5 tests passed in `build/` |
+-| Existing tests in Qt configuration | Pass | 5/5 tests passed in `build-qt/` |
+-| PNG creation | Pass | `examples/saved_plots/point_plot.png` was created |
+-| PNG validity and dimensions | Pass | Valid PNG signature; dimensions `760x520`; 10,141 bytes |
+-| Directory auto-creation | Pass | Destination was absent before launch and recreated by the application |
+-| Overwrite behavior | Pass | A second run advanced the output timestamp without creating duplicate files |
+-| Working-directory independence | Pass | Launched from `C:\Windows\Temp`; source-tree PNG was updated |
+-| Qt event loop | Pass | Application remained running during the runtime check |
+-| Export failure handling | Not simulated | Error paths are implemented, but an unwritable destination was not forced |
+-| Invalid plot input export suppression | Code verified | Export is guarded by successful `transformPointPlot` result; no separate runtime invalid-input test was added |
+-
+-## F. Architectural Confirmation
+-
+-- The core library remains Qt-independent.
+-- The existing point-plot transformation is unchanged.
+-- The existing widget painting logic is reused through `QWidget::render()`.
+-- Export behavior remains in the Qt example layer.
+-- No swarm or heatmap export functionality was added.
+-- No unrelated plot functionality was modified.
+-
+-## G. Known Limitations
+-
+-- The example currently uses its built-in dataset.
+-- A controlled unwritable-directory test was not performed because the
+-  configured destination is writable in the current environment.
+-- Export failure is reported to standard error, but the application does not
+-  return a dedicated non-zero exit code for an export failure.
+-- The PNG is generated when the application starts; there is no interactive
+-  export button yet.
+diff --git a/reports/point_plot_qt_renderer_readiness.md b/reports/point_plot_qt_renderer_readiness.md
+deleted file mode 100644
+index 9adeb74..0000000
+--- a/reports/point_plot_qt_renderer_readiness.md
++++ /dev/null
+@@ -1,166 +0,0 @@
+-# Point Plot to Qt Renderer Readiness
+-
+-## Overall status
+-
+-**Data pipeline ready; Qt rendering layer not started.**
+-
+-The project has a clean separation between plot-data preparation and UI code.
+-The point-plot transformation is implemented and tested, but the Qt demo
+-currently only displays a `QLabel`; no chart or renderer is connected yet.
+-
+-## Current data flow
+-
+-```text
+-Dataset
+-  -> PointPlotValidator
+-  -> transformPointPlot()
+-  -> PointPlotData
+-  -> Qt renderer: not implemented
+-```
+-
+-## Input model
+-
+-[`module1.hpp`](../include/cpp_group_6_mini_seaborn/module1.hpp) defines the
+-input as categorical observations with numeric values:
+-
+-```cpp
+-struct DataPoint {
+-    std::string category;
+-    double value;
+-};
+-
+-using Dataset = std::vector<DataPoint>;
+-```
+-
+-## Validation
+-
+-[`validator.cpp`](../src/validator.cpp) validates point-plot input by checking:
+-
+-- The dataset is not empty.
+-- Every category is non-empty.
+-- Every numeric value is finite.
+-- Validation errors are collected in `ValidationResult`.
+-
+-Invalid input causes the point transformation to return `std::nullopt`.
+-
+-## Point-plot transformation
+-
+-[`point_plot.cpp`](../src/point_plot.cpp) currently:
+-
+-- Groups observations by category.
+-- Calculates the arithmetic mean for each category.
+-- Produces one output point per category.
+-- Uses deterministic category ordering through `std::map`.
+-- Preserves each category as a string and each calculated mean as a `double`.
+-
+-The output types in
+-[`point_plot.hpp`](../include/cpp_group_6_mini_seaborn/point_plot.hpp) are:
+-
+-```cpp
+-struct PointPlotPoint {
+-    std::string category;
+-    double value;
+-};
+-
+-struct PointPlotData {
+-    std::vector<PointPlotPoint> points;
+-};
+-```
+-
+-Example:
+-
+-```text
+-Input:
+-B -> 2
+-A -> -2
+-B -> 4
+-A -> 0
+-
+-Output:
+-A -> -1
+-B -> 3
+-```
+-
+-## Tests
+-
+-[`test_plot_transformers.cpp`](../tests/test_plot_transformers.cpp) verifies:
+-
+-- Successful transformation.
+-- One output point per category.
+-- Deterministic category ordering.
+-- Correct category means.
+-- Rejection of empty datasets.
+-- Rejection of non-finite values.
+-
+-The transformer is included in the core library through
+-[`CMakeLists.txt`](../CMakeLists.txt). Qt remains isolated to the optional demo
+-target.
+-
+-## What is ready for the renderer
+-
+-The Qt renderer can consume:
+-
+-```cpp
+-const auto transformed = cpp_group_6::transformPointPlot(data);
+-
+-if (!transformed) {
+-    // Display validation failure
+-}
+-
+-for (const auto& point : transformed->points) {
+-    const std::string& category = point.category;
+-    const double value = point.value;
+-}
+-```
+-
+-The renderer already has:
+-
+-- Category labels.
+-- Numeric Y-values.
+-- Stable category ordering.
+-- Validated finite values.
+-- One drawable point per category.
+-
+-## What is still missing
+-
+-`PointPlotData` is not yet a complete rendering model. The renderer still
+-needs decisions and implementation for:
+-
+-- X-axis positions for categories, such as `0, 1, 2...`.
+-- Y-axis range and margins.
+-- Pixel-to-data coordinate conversion.
+-- Axis and tick rendering.
+-- Point size, color, and styling.
+-- Labels and title.
+-- Handling empty or invalid transformation results.
+-- Optional tooltip or hover mapping back to category and value.
+-- A Qt widget or graphics implementation.
+-
+-The current
+-[`qt_integration_demo.cpp`](../examples/qt_integration_demo.cpp) only creates
+-a `QApplication` and displays a `QLabel`; it does not consume `Dataset` or
+-`PointPlotData`.
+-
+-## Recommended integration boundary
+-
+-Keep the existing transformation independent of Qt:
+-
+-```text
+-Dataset
+-  -> transformPointPlot()
+-  -> PointPlotData
+-  -> Qt adapter/widget
+-  -> screen coordinates and drawing
+-```
+-
+-A first renderer can use a custom `QWidget` with `paintEvent()`. It should
+-receive `PointPlotData` and handle only coordinate mapping and drawing. For
+-each output point, a basic mapping could be:
+-
+-```text
+-x = left_margin + category_index * category_spacing
+-y = plot_bottom - normalized(value) * plot_height
+-```
+-
+-This preserves the current architecture and avoids introducing Qt types into
+-the core library.
+diff --git a/src/transformers/heatmap_plot.cpp b/src/transformers/heatmap_plot.cpp
+index 78e1059..d5dceb4 100644
+--- a/src/transformers/heatmap_plot.cpp
++++ b/src/transformers/heatmap_plot.cpp
+@@ -3,6 +3,7 @@
+ #include "dataset_view.hpp"
+ #include "value_analysis.hpp"
+ 
++#include <cmath>
+ #include <optional>
+ 
+ namespace cpp_group_6 {
+@@ -23,7 +24,77 @@ std::optional<HeatmapPlotData> transformHeatmap(const HeatmapData& data) {
+         return std::nullopt;
+     }
+ 
+-    return HeatmapPlotData{data, *range};
++    return HeatmapPlotData{data, *range, {}, {}};
++}
++
++std::optional<HeatmapPlotData> transformHeatmap(
++    const NumericalDataset& data
++) {
++    HeatmapValidator validator(data);
++    if (!validator.validate().valid) {
++        return std::nullopt;
++    }
++
++    const std::size_t feature_count = data.feature_names.size();
++    std::vector<double> means(feature_count, 0.0);
++    for (const auto& row : data.values) {
++        for (std::size_t feature = 0; feature < feature_count; ++feature) {
++            means[feature] += row[feature];
++        }
++    }
++
++    for (double& mean : means) {
++        mean /= static_cast<double>(data.values.size());
++    }
++
++    std::vector<std::vector<std::optional<double>>> correlations(
++        feature_count,
++        std::vector<std::optional<double>>(feature_count)
++    );
++    std::vector<std::vector<double>> matrix(
++        feature_count,
++        std::vector<double>(feature_count, 0.0)
++    );
++
++    for (std::size_t row = 0; row < feature_count; ++row) {
++        for (std::size_t column = row; column < feature_count; ++column) {
++            double numerator = 0.0;
++            double row_sum = 0.0;
++            double column_sum = 0.0;
++
++            for (const auto& observation : data.values) {
++                const double row_delta = observation[row] - means[row];
++                const double column_delta =
++                    observation[column] - means[column];
++                numerator += row_delta * column_delta;
++                row_sum += row_delta * row_delta;
++                column_sum += column_delta * column_delta;
++            }
++
++            const double denominator = std::sqrt(row_sum * column_sum);
++            if (!std::isfinite(denominator) || denominator == 0.0) {
++                continue;
++            }
++
++            const double correlation = numerator / denominator;
++            correlations[row][column] = correlation;
++            correlations[column][row] = correlation;
++            matrix[row][column] = correlation;
++            matrix[column][row] = correlation;
++        }
++    }
++
++    HeatmapData display_matrix{
++        data.feature_names,
++        data.feature_names,
++        matrix
++    };
++    return HeatmapPlotData{
++        display_matrix,
++        ObservedRange{-1.0, 1.0},
++        data.feature_names,
++        correlations
++    };
+ }
+ 
+ } // namespace cpp_group_6
+diff --git a/src/transformers/swarm_plot.cpp b/src/transformers/swarm_plot.cpp
+index e37cdaf..ad1bf00 100644
+--- a/src/transformers/swarm_plot.cpp
++++ b/src/transformers/swarm_plot.cpp
+@@ -2,9 +2,12 @@
+ 
+ #include "validator.hpp"
+ 
++#include <algorithm>
++#include <cmath>
+ #include <map>
+ #include <optional>
+ #include <string>
++#include <vector>
+ 
+ namespace cpp_group_6 {
+ 
+@@ -24,17 +27,76 @@ std::optional<SwarmPlotData> transformSwarmPlot(const Dataset& data) {
+         }
+     }
+ 
+-    std::map<std::string, std::size_t> categoryCounts;
++    double minimum = data.front().value;
++    double maximum = data.front().value;
++    for (const auto& point : data) {
++        minimum = std::min(minimum, point.value);
++        maximum = std::max(maximum, point.value);
++    }
++
++    const double span = maximum - minimum;
++    const double normalizedSpan = span > 0.0 ? span : 1.0;
++    constexpr double verticalCollisionDistance = 0.06;
++    constexpr double horizontalCollisionDistance = 0.08;
++    constexpr double offsetStep = 0.08;
++    constexpr double maximumOffset = 0.36;
++
++    struct PlacedPoint {
++        double normalized_value;
++        double offset;
++    };
++    std::map<std::string, std::vector<PlacedPoint>> placedPoints;
++
+     SwarmPlotData result;
+     result.points.reserve(data.size());
+ 
+     for (const auto& point : data) {
+-        const std::size_t occurrence = categoryCounts[point.category]++;
+-        const double distance = static_cast<double>((occurrence + 1) / 2) * 0.1;
+-        const double offset =
+-            occurrence == 0
+-                ? 0.0
+-                : (occurrence % 2 == 1 ? distance : -distance);
++        const double normalizedValue =
++            (point.value - minimum) / normalizedSpan;
++        auto& categoryPoints = placedPoints[point.category];
++        double offset = 0.0;
++        double bestOffset = 0.0;
++        std::size_t bestCollisionCount = categoryPoints.size() + 1;
++
++        for (int candidateIndex = 0; candidateIndex <= 9; ++candidateIndex) {
++            const int side = candidateIndex == 0
++                ? 0
++                : (candidateIndex % 2 == 1 ? 1 : -1);
++            const int distanceIndex =
++                candidateIndex == 0 ? 0 : (candidateIndex + 1) / 2;
++            const double candidateOffset =
++                side * distanceIndex * offsetStep;
++
++            if (std::abs(candidateOffset) > maximumOffset) {
++                continue;
++            }
++
++            const std::size_t collisionCount = static_cast<std::size_t>(
++                std::count_if(
++                categoryPoints.begin(),
++                categoryPoints.end(),
++                [&](const PlacedPoint& placed) {
++                    return std::abs(normalizedValue - placed.normalized_value) <
++                               verticalCollisionDistance &&
++                           std::abs(candidateOffset - placed.offset) <
++                               horizontalCollisionDistance;
++                }
++                )
++            );
++            if (collisionCount < bestCollisionCount) {
++                bestCollisionCount = collisionCount;
++                bestOffset = candidateOffset;
++            }
++            if (collisionCount == 0) {
++                offset = candidateOffset;
++                break;
++            }
++        }
++        if (bestCollisionCount != 0) {
++            offset = bestOffset;
++        }
++
++        categoryPoints.push_back({normalizedValue, offset});
+ 
+         result.points.push_back(SwarmPlotPoint{
+             point.category,
+diff --git a/src/validator.cpp b/src/validator.cpp
+index f7d4294..94287f3 100644
+--- a/src/validator.cpp
++++ b/src/validator.cpp
+@@ -63,39 +63,146 @@ ValidationResult PointPlotValidator::validate() const {
+ }
+ 
+ HeatmapValidator::HeatmapValidator(const HeatmapData& data)
+-    : data_(data) {}
++    : matrix_data_(&data),
++      numerical_data_(nullptr) {}
++
++HeatmapValidator::HeatmapValidator(const NumericalDataset& data)
++    : matrix_data_(nullptr),
++      numerical_data_(&data) {}
+ 
+ ValidationResult HeatmapValidator::validate() const {
++    if (numerical_data_ != nullptr) {
++        ValidationResult result{true, {}};
++        const auto& data = *numerical_data_;
++
++        if (data.feature_names.empty()) {
++            result.valid = false;
++            result.errors.push_back("Heatmap requires at least one feature.");
++        }
++
++        if (data.values.size() < 2) {
++            result.valid = false;
++            result.errors.push_back(
++                "Heatmap requires at least two observations."
++            );
++        }
++
++        if (data.feature_names.size() !=
++            (data.values.empty() ? 0 : data.values.front().size())) {
++            result.valid = false;
++            result.errors.push_back(
++                "Feature count must match the numerical row width."
++            );
++        }
++
++        for (std::size_t feature = 0;
++             feature < data.feature_names.size();
++             ++feature) {
++            if (data.feature_names[feature].empty()) {
++                result.valid = false;
++                result.errors.push_back(
++                    "Feature " + std::to_string(feature + 1) +
++                    " cannot be empty."
++                );
++            }
++
++            for (std::size_t previous = 0; previous < feature; ++previous) {
++                if (data.feature_names[feature] ==
++                    data.feature_names[previous]) {
++                    result.valid = false;
++                    result.errors.push_back(
++                        "Feature names must be unique."
++                    );
++                    break;
++                }
++            }
++        }
++
++        if (!data.values.empty()) {
++            const std::size_t feature_count = data.values.front().size();
++            for (std::size_t row = 0; row < data.values.size(); ++row) {
++                if (data.values[row].size() != feature_count) {
++                    result.valid = false;
++                    result.errors.push_back(
++                        "Row " + std::to_string(row + 1) +
++                        ": Numerical row length is inconsistent."
++                    );
++                    continue;
++                }
++
++                for (std::size_t feature = 0;
++                     feature < data.values[row].size();
++                     ++feature) {
++                    if (!std::isfinite(data.values[row][feature])) {
++                        result.valid = false;
++                        result.errors.push_back(
++                            "Cell (" + std::to_string(row + 1) + ", " +
++                            std::to_string(feature + 1) +
++                            "): Value must be finite."
++                        );
++                    }
++                }
++            }
++
++            if (result.valid && feature_count > 0) {
++                for (std::size_t feature = 0;
++                     feature < feature_count;
++                     ++feature) {
++                    const double first = data.values.front()[feature];
++                    bool has_variation = false;
++                    for (const auto& row : data.values) {
++                        if (row[feature] != first) {
++                            has_variation = true;
++                            break;
++                        }
++                    }
++
++                    if (!has_variation) {
++                        result.valid = false;
++                        result.errors.push_back(
++                            "Feature " + std::to_string(feature + 1) +
++                            ": Pearson correlation is undefined for a "
++                            "constant feature."
++                        );
++                    }
++                }
++            }
++        }
++
++        return result;
++    }
++
++    const auto& data = *matrix_data_;
+     ValidationResult result{true, {}};
+ 
+-    if (data_.values.empty()) {
++    if (data.values.empty()) {
+         return ValidationResult{false, {"Heatmap matrix cannot be empty."}};
+     }
+ 
+-    const std::size_t columnCount = data_.values.front().size();
++    const std::size_t columnCount = data.values.front().size();
+     if (columnCount == 0) {
+         result = invalidResult();
+         result.errors.push_back("Heatmap matrix must contain at least one column.");
+     }
+ 
+-    if (!data_.rowLabels.empty() &&
+-        data_.rowLabels.size() != data_.values.size()) {
++    if (!data.rowLabels.empty() &&
++        data.rowLabels.size() != data.values.size()) {
+         result.valid = false;
+         result.errors.push_back(
+             "Row label count must match the matrix row count."
+         );
+     }
+ 
+-    if (!data_.columnLabels.empty() &&
+-        data_.columnLabels.size() != columnCount) {
++    if (!data.columnLabels.empty() &&
++        data.columnLabels.size() != columnCount) {
+         result.valid = false;
+         result.errors.push_back(
+             "Column label count must match the matrix column count."
+         );
+     }
+ 
+-    for (std::size_t row = 0; row < data_.values.size(); ++row) {
+-        const auto& values = data_.values[row];
++    for (std::size_t row = 0; row < data.values.size(); ++row) {
++        const auto& values = data.values[row];
+ 
+         if (values.empty()) {
+             result.valid = false;
+@@ -125,8 +232,8 @@ ValidationResult HeatmapValidator::validate() const {
+         }
+     }
+ 
+-    for (std::size_t row = 0; row < data_.rowLabels.size(); ++row) {
+-        if (data_.rowLabels[row].empty()) {
++    for (std::size_t row = 0; row < data.rowLabels.size(); ++row) {
++        if (data.rowLabels[row].empty()) {
+             result.valid = false;
+             result.errors.push_back(
+                 "Row label " + std::to_string(row + 1) +
+@@ -135,8 +242,8 @@ ValidationResult HeatmapValidator::validate() const {
+         }
+     }
+ 
+-    for (std::size_t column = 0; column < data_.columnLabels.size(); ++column) {
+-        if (data_.columnLabels[column].empty()) {
++    for (std::size_t column = 0; column < data.columnLabels.size(); ++column) {
++        if (data.columnLabels[column].empty()) {
+             result.valid = false;
+             result.errors.push_back(
+                 "Column label " + std::to_string(column + 1) +
+diff --git a/tests/test_plot_transformers.cpp b/tests/test_plot_transformers.cpp
+index d65a064..e2ce560 100644
+--- a/tests/test_plot_transformers.cpp
++++ b/tests/test_plot_transformers.cpp
+@@ -63,10 +63,10 @@ int main() {
+           swarm.has_value() &&
+           swarm->points[1].numerical_position == -2.0 &&
+           swarm->points[3].numerical_position == 0.0);
+-    check("Swarm transform applies deterministic offsets",
++    check("Swarm transform keeps non-colliding values centered",
+           swarm.has_value() &&
+           swarm->points[0].offset == 0.0 &&
+-          swarm->points[2].offset == 0.1);
++          swarm->points[2].offset == 0.0);
+ 
+     const HeatmapData matrix{
+         {"R1", "R2"},

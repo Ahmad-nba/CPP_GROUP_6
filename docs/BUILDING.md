@@ -98,7 +98,7 @@ The other applications are launched similarly:
 ```
 
 Each application opens a Qt window and writes a PNG to
-`examples/saved_plots/`. The directory is created automatically.
+`data/output/`. The directory is created automatically.
 
 If Qt reports that it cannot load a platform plugin, set the plugin paths
 before launching:

@@ -80,7 +80,7 @@ if(CPP_GROUP_6_BUILD_POINT_PLOT)
     target_compile_definitions(
         point_plot_run
         PRIVATE
-            POINT_PLOT_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
+            POINT_PLOT_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/data/output"
     )
 
     add_executable(
@@ -100,7 +100,7 @@ if(CPP_GROUP_6_BUILD_POINT_PLOT)
     target_compile_definitions(
         heatmap_run
         PRIVATE
-            HEATMAP_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
+            HEATMAP_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/data/output"
     )
 
     add_executable(
@@ -135,7 +135,7 @@ if(CPP_GROUP_6_BUILD_POINT_PLOT)
     target_compile_definitions(
         swarm_plot_run
         PRIVATE
-            SWARM_PLOT_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
+            SWARM_PLOT_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/data/output"
     )
 endif()
 

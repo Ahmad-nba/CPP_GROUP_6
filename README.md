@@ -305,7 +305,7 @@ The other graphical applications are launched with:
 ```
 
 Each application displays a Qt window and saves its PNG output in
-`examples/saved_plots/`.
+`data/output/`.
 
 ### 6.4 Further Documentation
 
@@ -429,7 +429,7 @@ values remain centered while duplicate or nearby values are spread only when
 necessary.
 
 The point-plot executable has been run successfully, and its PNG output has
-been generated in `examples/saved_plots/`.
+been generated in `data/output/`.
 
 The plot datasets are maintained in `data/input/input_data.cpp`. The Qt run
 files consume the point-plot, swarm-plot, and heatmap data from that shared

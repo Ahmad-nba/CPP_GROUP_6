@@ -2,7 +2,8 @@
 /build/
 /build-qt/
 /cmake-build-*/
-/examples/saved_plots/
+/data/output/*
+!/data/output/.gitkeep
 
 /explanations
 

@@ -21,7 +21,7 @@ into a `QImage`. No second point-rendering implementation was added.
   - Reports success and failure messages.
   - Skips export when point-plot transformation fails.
 - [`.gitignore`](../.gitignore)
-  - Ignores generated files under `examples/saved_plots/`.
+  - Ignores generated files under `data/output/`.
 
 ## C. Export Workflow
 
@@ -33,7 +33,7 @@ Dataset
   -> PointPlotWidget::paintEvent()
   -> QWidget::render()
   -> QImage
-  -> examples/saved_plots/point_plot.png
+  -> data/output/point_plot.png
 ```
 
 The application shows the widget, processes pending Qt events, and then
@@ -46,14 +46,14 @@ window.
 The configured output file is:
 
 ```text
-examples/saved_plots/point_plot.png
+data/output/point_plot.png
 ```
 
 The output directory is supplied by CMake as an absolute path based on the
 project source directory:
 
 ```text
-${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots
+${CMAKE_CURRENT_SOURCE_DIR}/data/output
 ```
 
 The path is not based on the process working directory. Therefore, launching
@@ -71,7 +71,7 @@ The directory is created with `std::filesystem::create_directories`. Existing
 | Qt example build | Pass | `cmake --build build-qt --target point_plot_run` completed |
 | Existing core tests | Pass | 5/5 tests passed in `build/` |
 | Existing tests in Qt configuration | Pass | 5/5 tests passed in `build-qt/` |
-| PNG creation | Pass | `examples/saved_plots/point_plot.png` was created |
+| PNG creation | Pass | `data/output/point_plot.png` was created |
 | PNG validity and dimensions | Pass | Valid PNG signature; dimensions `760x520`; 10,141 bytes |
 | Directory auto-creation | Pass | Destination was absent before launch and recreated by the application |
 | Overwrite behavior | Pass | A second run advanced the output timestamp without creating duplicate files |

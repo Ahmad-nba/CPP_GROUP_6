@@ -3,7 +3,7 @@
 #include <QImage>
 #include <QPainter>
 
-#include "swarm_plot_widget.hpp"
+#include "swarm_plot-widget.hpp"
 
 #include <filesystem>
 #include <iostream>

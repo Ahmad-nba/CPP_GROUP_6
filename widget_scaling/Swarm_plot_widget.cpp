@@ -1,4 +1,4 @@
-#include "swarm_plot_widget.hpp"
+#include "swarm_plot-widget.hpp"
 
 #include <QFontMetrics>
 #include <QPainter>

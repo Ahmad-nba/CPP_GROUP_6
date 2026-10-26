@@ -52,11 +52,13 @@ private:
 class HeatmapValidator final : public DataValidator {
 public:
     explicit HeatmapValidator(const HeatmapData& data);
+    explicit HeatmapValidator(const NumericalDataset& data);
 
     ValidationResult validate() const override;
 
 private:
-    const HeatmapData& data_;
+    const HeatmapData* matrix_data_;
+    const NumericalDataset* numerical_data_;
 };
 
 } // namespace cpp_group_6

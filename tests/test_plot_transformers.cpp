@@ -63,10 +63,10 @@ int main() {
           swarm.has_value() &&
           swarm->points[1].numerical_position == -2.0 &&
           swarm->points[3].numerical_position == 0.0);
-    check("Swarm transform applies deterministic offsets",
+    check("Swarm transform keeps non-colliding values centered",
           swarm.has_value() &&
           swarm->points[0].offset == 0.0 &&
-          swarm->points[2].offset == 0.1);
+          swarm->points[2].offset == 0.0);
 
     const HeatmapData matrix{
         {"R1", "R2"},

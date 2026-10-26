@@ -49,6 +49,17 @@ add_executable(test_plot_transformers tests/test_plot_transformers.cpp)
 target_link_libraries(test_plot_transformers PRIVATE cpp_group_6)
 add_test(NAME test_plot_transformers COMMAND test_plot_transformers)
 
+add_executable(
+    test_heatmap_correlation
+    tests/test_heatmap_correlation.cpp
+)
+target_link_libraries(test_heatmap_correlation PRIVATE cpp_group_6)
+add_test(NAME test_heatmap_correlation COMMAND test_heatmap_correlation)
+
+add_executable(test_swarm_plot tests/test_swarm_plot.cpp)
+target_link_libraries(test_swarm_plot PRIVATE cpp_group_6)
+add_test(NAME test_swarm_plot COMMAND test_swarm_plot)
+
 if(CPP_GROUP_6_BUILD_POINT_PLOT)
     find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
@@ -68,6 +79,42 @@ if(CPP_GROUP_6_BUILD_POINT_PLOT)
         point_plot_run
         PRIVATE
             POINT_PLOT_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
+    )
+
+    add_executable(
+        heatmap_run
+        examples/heatmap_run.cpp
+        widget_scaling/heatmap_plot_widget.cpp
+        include/cpp_group_6_mini_seaborn/heatmap_plot_widget.hpp
+    )
+    target_link_libraries(
+        heatmap_run
+        PRIVATE
+            cpp_group_6
+            Qt6::Widgets
+    )
+    target_compile_definitions(
+        heatmap_run
+        PRIVATE
+            HEATMAP_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
+    )
+
+    add_executable(
+        swarm_plot_run
+        examples/swarm_plot_run.cpp
+        widget_scaling/Swarm_plot_widget.cpp
+        include/cpp_group_6_mini_seaborn/swarm_plot-widget.hpp
+    )
+    target_link_libraries(
+        swarm_plot_run
+        PRIVATE
+            cpp_group_6
+            Qt6::Widgets
+    )
+    target_compile_definitions(
+        swarm_plot_run
+        PRIVATE
+            SWARM_PLOT_OUTPUT_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/examples/saved_plots"
     )
 endif()
 

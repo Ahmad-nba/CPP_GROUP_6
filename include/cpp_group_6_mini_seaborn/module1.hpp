@@ -12,5 +12,10 @@ namespace cpp_group_6{
     };
 
     using Dataset = std::vector<DataPoint>;
+
+    struct NumericalDataset {
+        std::vector<std::string> feature_names;
+        std::vector<std::vector<double>> values;
+    };
 }// namespace cpp_group_6
 #endif

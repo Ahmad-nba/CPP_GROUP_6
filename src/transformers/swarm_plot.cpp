@@ -2,9 +2,13 @@
 
 #include "validator.hpp"
 
+#include <algorithm>
+#include <cmath>
+#include <limits>
 #include <map>
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace cpp_group_6 {
 
@@ -24,17 +28,56 @@ std::optional<SwarmPlotData> transformSwarmPlot(const Dataset& data) {
         }
     }
 
-    std::map<std::string, std::size_t> categoryCounts;
+    double minimumValue = data.front().value;
+    double maximumValue = minimumValue;
+    for (const auto& point : data) {
+        minimumValue = std::min(minimumValue, point.value);
+        maximumValue = std::max(maximumValue, point.value);
+    }
+
+    const double valueRange = maximumValue - minimumValue;
+    const double minimumVerticalSeparation =
+        std::max(valueRange * 0.02, std::numeric_limits<double>::epsilon());
+
+    struct PlacedPoint {
+        double value;
+        double offset;
+    };
+
+    std::map<std::string, std::vector<PlacedPoint>> placedPoints;
     SwarmPlotData result;
     result.points.reserve(data.size());
 
     for (const auto& point : data) {
-        const std::size_t occurrence = categoryCounts[point.category]++;
-        const double distance = static_cast<double>((occurrence + 1) / 2) * 0.1;
-        const double offset =
-            occurrence == 0
-                ? 0.0
-                : (occurrence % 2 == 1 ? distance : -distance);
+        auto& categoryPoints = placedPoints[point.category];
+        double offset = 0.0;
+        std::size_t distance = 0;
+
+        while (true) {
+            const double candidate =
+                distance == 0
+                    ? 0.0
+                    : ((distance + 1) / 2) * 0.1 *
+                          (distance % 2 == 1 ? 1.0 : -1.0);
+            const bool collides = std::any_of(
+                categoryPoints.begin(),
+                categoryPoints.end(),
+                [&](const PlacedPoint& placed) {
+                    return std::abs(point.value - placed.value) <
+                               minimumVerticalSeparation &&
+                           std::abs(candidate - placed.offset) < 0.2;
+                }
+            );
+
+            if (!collides) {
+                offset = candidate;
+                break;
+            }
+
+            ++distance;
+        }
+
+        categoryPoints.push_back({point.value, offset});
 
         result.points.push_back(SwarmPlotPoint{
             point.category,

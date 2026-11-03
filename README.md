@@ -10,7 +10,7 @@
 
 | No. | Name | Registration Number | Contribution |
 |---:|---|---|---|
-| 1 | AHAMADA SHAMURAN MUBIRU | 25/08747/PS | Owns the input-layer contract; coordinates point-plot integration and cross-plot consistency; owns image export and release integration. |
+| 1 | AHAMADA SHAMURAN MUBIRU | 25/U/08747/PS | Owns the input-layer contract; coordinates point-plot integration and cross-plot consistency; owns image export and release integration. |
 | 2 | OBULUK AGATHA | 25/U/08777/PS | Owns the validation interface and swarm plots. |
 | 3 | Kazibwe Joshua | 25/U/08582/PS | Owns heatmap plotting and maintains design and progress records. |
 | 4 | NANKYA AIDAH F | 25/U/0852 | Verifies dataset-view behavior and owns focused dataset-view and regression tests. |

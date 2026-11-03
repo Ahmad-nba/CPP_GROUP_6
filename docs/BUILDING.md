@@ -84,7 +84,7 @@ cmake --build build-qt --target point_plot_run
 ## Run a visualization on Windows
 
 In PowerShell, make the Qt runtime DLLs available and launch the executable:
-
+** To run the executable run it from the msy64\ucrt terminal, not the mingw64 **
 ```powershell
 $env:PATH = "C:\msys64\ucrt64\bin;" + $env:PATH
 .\build-qt\point_plot_run.exe

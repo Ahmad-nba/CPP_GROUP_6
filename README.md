@@ -8,17 +8,17 @@
 **Institution:** Makerere University CEDAT  
 **Group Members:**
 
-| No. | Name | Registration Number |
-|---:|---|---|
-| 1 | AHAMADA SHAMURAN MUBIRU | 25/08747/PS |
-| 2 | OBULUK AGATHA | 25/U/08777/PS |
-| 3 | Kazibwe Joshua | 25/U/08582/PS |
-| 4 | NANKYA AIDAH F | 25/U/0852 |
-| 5 | Namboowa Sylivia | 25/U/08610/PS |
-| 6 | MASOKOYI HASSAN KHAKOSI | 25/U/08746/PS |
-| 7 | JANEFER MBABAZI | 25/U/0447 |
-| 8 | NAKONDE RITAH   | 25/U/08608/PS |
-| 9 | MUBIRU JAMADAH  | 25/U/07946/PS |
+| No. | Name | Registration Number | Contribution |
+|---:|---|---|---|
+| 1 | AHAMADA SHAMURAN MUBIRU | 25/08747/PS | Owns the input-layer contract; coordinates point-plot integration and cross-plot consistency; owns image export and release integration. |
+| 2 | OBULUK AGATHA | 25/U/08777/PS | Owns the validation interface and swarm plots. |
+| 3 | Kazibwe Joshua | 25/U/08582/PS | Owns heatmap plotting and maintains design and progress records. |
+| 4 | NANKYA AIDAH F | 25/U/0852 | Verifies dataset-view behavior and owns focused dataset-view and regression tests. |
+| 5 | Namboowa Sylivia | 25/U/08610/PS | Owns validator and observed-range tests, including invalid-input coverage and focused tests. |
+| 6 | MASOKOYI HASSAN KHAKOSI | 25/U/08746/PS | Documents analysis and transformation decisions and maintains design and progress records. |
+| 7 | JANEFER MBABAZI | 25/U/0447 | Maintains pipeline specifications, stage responsibilities, acceptance criteria, and plotting documentation. |
+| 8 | NAKONDE RITAH | 25/U/08608/PS | Owns the validation implementation in `src/validator.cpp` and the validation-to-analysis handoff. |
+| 9 | MUBIRU JAMADAH | 25/U/07946/PS | Documents analysis and transformation decisions and maintains design and progress records. |
 
 **Submission Date:** 26th October 2026
 
